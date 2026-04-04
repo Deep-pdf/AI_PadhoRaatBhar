@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Curriculum - AI Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#004395",
+                    "inverse-primary": "#7331df",
+                    "on-primary-fixed-variant": "#5b00c5",
+                    "on-tertiary-fixed": "#2c0051",
+                    "on-surface-variant": "#ccc3d7",
+                    "on-tertiary-container": "#e3c2ff",
+                    "on-secondary-fixed": "#001a42",
+                    "inverse-on-surface": "#313031",
+                    "primary-container": "#6d28d9",
+                    "tertiary": "#ddb7ff",
+                    "error-container": "#93000a",
+                    "surface-tint": "#d3bbff",
+                    "on-error": "#690005",
+                    "tertiary-fixed-dim": "#ddb7ff",
+                    "on-primary-fixed": "#250059",
+                    "surface-bright": "#3a393a",
+                    "tertiary-container": "#7d21cb",
+                    "on-surface": "#e5e2e3",
+                    "surface-dim": "#131314",
+                    "inverse-surface": "#e5e2e3",
+                    "primary": "#d3bbff",
+                    "surface": "#131314",
+                    "secondary": "#adc6ff",
+                    "on-background": "#e5e2e3",
+                    "outline": "#958da1",
+                    "surface-container-low": "#1c1b1c",
+                    "on-tertiary-fixed-variant": "#6900b3",
+                    "surface-container": "#201f20",
+                    "primary-fixed": "#ebddff",
+                    "on-secondary": "#002e6a",
+                    "on-primary-container": "#dac5ff",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "surface-variant": "#353436",
+                    "primary-fixed-dim": "#d3bbff",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-highest": "#353436",
+                    "secondary-container": "#0566d9",
+                    "tertiary-fixed": "#f0dbff",
+                    "outline-variant": "#4a4455",
+                    "on-tertiary": "#490080",
+                    "on-secondary-container": "#e6ecff",
+                    "background": "#131314",
+                    "surface-container-lowest": "#0e0e0f",
+                    "secondary-fixed": "#d8e2ff",
+                    "surface-container-high": "#2a2a2b",
+                    "error": "#ffb4ab",
+                    "on-primary": "#3f008d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ghost-border { border: 1px solid rgba(149, 141, 161, 0.15); }
+        .border-glow { box-shadow: 0 0 15px rgba(109, 40, 217, 0.3); }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0A0A0B; }
+        ::-webkit-scrollbar-thumb { background: #353436; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4a4455; }
+    </style>
+</head>
+<body class="bg-[#0E0E0F] text-on-surface selection:bg-primary/30">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-[#131314] flex justify-between items-center px-8 h-16 max-w-full ghost-border">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-[#d3bbff]">AI Tracker</span>
+<nav class="hidden md:flex gap-6 items-center h-full">
+<a class="text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded" href="#">Dashboard</a>
+<a class="text-[#d3bbff] border-b-2 border-[#6d28d9] pb-1 font-medium" href="#">Curriculum</a>
+<a class="text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded" href="#">Playground</a>
+<a class="text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-[#ccc3d7] hover:text-[#d3bbff] transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-[#ccc3d7] hover:text-[#d3bbff] transition-colors">
+<span class="material-symbols-outlined">terminal</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User Profile Avatar" data-alt="User profile avatar of a developer in a professional setting with warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvhx_lJcF37wDccZKT3v62yJCBreX2p2fhaFsVeSRKeatOOkDBAJCwXwyhWXzW3GU4QqvZJj282ZKlWtY2x0Vj7FLTDqaeTAbGePykxlKuJ0gHXMktlvVeG3SyyeL9UmJKl-VP9J0Q6hKRkU5ND1I5Z4a7IIpclG_cd71eDsK55ejRXyzXjwdH2XK2wO6tXdYv3Fy3aKhFwU2sx0jRKOWcaTRvVfubi2dEh9hATlflYseJ3lT9KsD7DqYr3iN3_xIRp5hkH6VU-Cd-"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-[#0E0E0F] flex flex-col py-6 px-4 hidden lg:flex pt-20">
+<div class="mb-8 px-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center text-primary shadow-lg">
+<span class="material-symbols-outlined">memory</span>
+</div>
+<div>
+<h2 class="text-lg font-black text-[#d3bbff] leading-none">AI Tracker</h2>
+<p class="text-[0.6875rem] text-on-surface-variant/60 tracking-widest mt-1">v2.4.0-ALPHA</p>
+</div>
+</div>
+</div>
+<button class="mb-8 w-full py-3 px-4 rounded-xl bg-gradient-to-br from-primary-container to-secondary-container text-white font-semibold text-sm flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(109,40,217,0.4)] transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+            New Training Run
+        </button>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2.5 text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 bg-[#201F20] text-[#d3bbff] shadow-[0_0_15px_rgba(109,40,217,0.3)] transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="text-sm font-medium">Learning Paths</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined">memory</span>
+<span class="text-sm font-medium">Neural Logs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="text-sm font-medium">Datasets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined">key</span>
+<span class="text-sm font-medium">API Keys</span>
+</a>
+</nav>
+<div class="mt-auto space-y-1 border-t border-outline-variant/20 pt-4">
+<a class="flex items-center gap-3 px-4 py-2 text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm">Documentation</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="lg:ml-64 pt-24 px-8 pb-12 min-h-screen">
+<!-- Header Section -->
+<div class="max-w-7xl mx-auto mb-10">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="bg-surface-variant text-primary text-[0.6875rem] font-bold tracking-widest px-2 py-1 rounded uppercase">Active Path</span>
+<span class="text-on-surface-variant text-sm">• Neural Architecture 101</span>
+</div>
+<h1 class="text-4xl lg:text-5xl font-extrabold tracking-tight text-on-surface mb-2">Curriculum Roadmap</h1>
+<p class="text-on-surface-variant max-w-2xl">Mastering the depths of transformer models and reinforcement learning through structured modules.</p>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-low p-1.5 rounded-xl border border-outline-variant/10">
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-primary text-sm font-medium shadow-sm transition-all">All Tasks</button>
+<button class="px-4 py-2 rounded-lg text-on-surface-variant hover:text-on-surface text-sm font-medium transition-all">Pending</button>
+<button class="px-4 py-2 rounded-lg text-on-surface-variant hover:text-on-surface text-sm font-medium transition-all">Completed</button>
+</div>
+</div>
+</div>
+<!-- Progress Overview Bento -->
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="bg-surface-container rounded-[1.5rem] p-6 ghost-border flex flex-col justify-between">
+<div>
+<p class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase mb-4">Total Progress</p>
+<h3 class="text-4xl font-bold tracking-tighter text-on-surface">64%</h3>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full mt-6 overflow-hidden">
+<div class="bg-gradient-to-r from-primary to-secondary h-full w-[64%]"></div>
+</div>
+</div>
+<div class="bg-surface-container rounded-[1.5rem] p-6 ghost-border">
+<p class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase mb-4">Completed</p>
+<div class="flex items-end gap-2">
+<h3 class="text-4xl font-bold tracking-tighter text-[#4ade80]">32</h3>
+<span class="text-on-surface-variant text-lg font-medium pb-1">/ 50 Tasks</span>
+</div>
+<p class="text-xs text-on-surface-variant/60 mt-4">+4 from last week</p>
+</div>
+<div class="bg-surface-container rounded-[1.5rem] p-6 ghost-border relative overflow-hidden group">
+<div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-[120px]">auto_awesome</span>
+</div>
+<p class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase mb-4">Current Focus</p>
+<h3 class="text-xl font-bold text-on-surface leading-snug">Attention Mechanisms &amp; Self-Supervision</h3>
+<div class="mt-4 flex items-center gap-2 text-primary text-sm font-medium">
+<span>Continue Module</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Table Section -->
+<div class="max-w-7xl mx-auto">
+<div class="bg-surface-container-low rounded-[1rem] overflow-hidden ghost-border shadow-2xl">
+<div class="overflow-x-auto">
+<table class="w-full border-collapse text-left">
+<thead class="sticky top-0 bg-[#1C1B1C] z-10">
+<tr class="border-b border-outline-variant/10">
+<th class="px-6 py-5 text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">Date</th>
+<th class="px-6 py-5 text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">Day</th>
+<th class="px-6 py-5 text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">Topic</th>
+<th class="px-6 py-5 text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">Task</th>
+<th class="px-6 py-5 text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase">Resource</th>
+<th class="px-6 py-5 text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase text-center">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<!-- Completed Row -->
+<tr class="hover:bg-surface-bright/50 transition-colors group">
+<td class="px-6 py-4 text-sm font-medium text-on-surface-variant">March 12</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant/60">Tue</td>
+<td class="px-6 py-4">
+<span class="text-sm font-semibold text-on-surface">Embeddings</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Map high-dim vectors to latent space</td>
+<td class="px-6 py-4">
+<a class="text-xs text-secondary hover:underline flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-xs">link</span>
+                                        PapersWithCode
+                                    </a>
+</td>
+<td class="px-6 py-4 text-center">
+<div class="inline-flex items-center justify-center w-6 h-6 rounded bg-[#4ade80]/10 border border-[#4ade80]/30 text-[#4ade80]">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</td>
+</tr>
+<!-- Completed Row -->
+<tr class="hover:bg-surface-bright/50 transition-colors group">
+<td class="px-6 py-4 text-sm font-medium text-on-surface-variant">March 13</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant/60">Wed</td>
+<td class="px-6 py-4">
+<span class="text-sm font-semibold text-on-surface">Attention</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Implement Multi-Head Scaled Dot-Product</td>
+<td class="px-6 py-4">
+<a class="text-xs text-secondary hover:underline flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-xs">terminal</span>
+                                        PyTorch Docs
+                                    </a>
+</td>
+<td class="px-6 py-4 text-center">
+<div class="inline-flex items-center justify-center w-6 h-6 rounded bg-[#4ade80]/10 border border-[#4ade80]/30 text-[#4ade80]">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</td>
+</tr>
+<!-- TODAY ROW -->
+<tr class="bg-primary/5 border-l-4 border-primary border-glow relative group">
+<td class="px-6 py-6 text-sm font-bold text-primary">March 14</td>
+<td class="px-6 py-6 text-sm font-bold text-primary">Thu</td>
+<td class="px-6 py-6">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-on-surface">Positional Encoding</span>
+<span class="text-[0.625rem] text-primary uppercase tracking-tighter font-bold mt-1">Today's Focus</span>
+</div>
+</td>
+<td class="px-6 py-6 text-sm text-on-surface">Sine and Cosine frequency embedding implementation</td>
+<td class="px-6 py-6">
+<a class="text-xs text-secondary hover:underline flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-xs">menu_book</span>
+                                        Deep Learning Book
+                                    </a>
+</td>
+<td class="px-6 py-6 text-center">
+<div class="inline-flex items-center justify-center w-6 h-6 rounded border-2 border-primary/50 cursor-pointer hover:border-primary transition-all">
+</div>
+</td>
+</tr>
+<!-- Future Row -->
+<tr class="hover:bg-surface-bright/50 transition-colors group">
+<td class="px-6 py-4 text-sm font-medium text-on-surface-variant/40">March 15</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant/30">Fri</td>
+<td class="px-6 py-4">
+<span class="text-sm font-semibold text-on-surface/40">Normalization</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant/40">LayerNorm vs BatchNorm in Transformer blocks</td>
+<td class="px-6 py-4">
+<a class="text-xs text-secondary/40 hover:underline flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-xs">school</span>
+                                        Stanford CS224N
+                                    </a>
+</td>
+<td class="px-6 py-4 text-center">
+<div class="inline-flex items-center justify-center w-6 h-6 rounded border border-outline-variant/30 cursor-not-allowed">
+</div>
+</td>
+</tr>
+<!-- Future Row -->
+<tr class="hover:bg-surface-bright/50 transition-colors group">
+<td class="px-6 py-4 text-sm font-medium text-on-surface-variant/40">March 16</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant/30">Sat</td>
+<td class="px-6 py-4">
+<span class="text-sm font-semibold text-on-surface/40">Final Assembly</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant/40">Complete the Encoder-Decoder pipeline</td>
+<td class="px-6 py-4">
+<a class="text-xs text-secondary/40 hover:underline flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-xs">folder</span>
+                                        Project Repo
+                                    </a>
+</td>
+<td class="px-6 py-4 text-center">
+<div class="inline-flex items-center justify-center w-6 h-6 rounded border border-outline-variant/30 cursor-not-allowed">
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="mt-6 flex items-center justify-between px-2">
+<p class="text-xs text-on-surface-variant">Showing current sprint: Week 4 - Architecture Foundations</p>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg bg-surface-container-low hover:bg-surface-container-high transition-colors ghost-border">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="p-2 rounded-lg bg-surface-container-low hover:bg-surface-container-high transition-colors ghost-border">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto py-12 bg-[#0A0A0B] flex flex-col items-center gap-4 px-8 border-t border-[#4a4455]/20">
+<div class="flex gap-8 mb-4">
+<a class="text-[#4a4455] hover:text-[#adc6ff] transition-colors duration-200 text-[0.6875rem] uppercase tracking-widest font-medium underline-offset-4 hover:underline" href="#">Privacy Policy</a>
+<a class="text-[#4a4455] hover:text-[#adc6ff] transition-colors duration-200 text-[0.6875rem] uppercase tracking-widest font-medium underline-offset-4 hover:underline" href="#">Terms of Service</a>
+<a class="text-[#4a4455] hover:text-[#adc6ff] transition-colors duration-200 text-[0.6875rem] uppercase tracking-widest font-medium underline-offset-4 hover:underline" href="#">Changelog</a>
+</div>
+<p class="text-[#4a4455] text-[0.6875rem] uppercase tracking-widest font-bold">© 2024 Neural Void Systems. Powered by Inter</p>
+</footer>
+<!-- Command Bar -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 backdrop-blur-xl bg-[#201F20]/70 border border-white/10 rounded-full px-6 py-3 flex items-center gap-6 shadow-2xl">
+<button class="flex items-center gap-2 text-on-surface/80 hover:text-primary transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-lg">search</span>
+            Search Path
+        </button>
+<div class="w-[1px] h-4 bg-white/10"></div>
+<button class="flex items-center gap-2 text-on-surface/80 hover:text-primary transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">bolt</span>
+            Quick Action
+        </button>
+<div class="w-[1px] h-4 bg-white/10"></div>
+<div class="flex items-center gap-1.5 px-2 py-0.5 bg-white/5 rounded text-[10px] font-bold text-on-surface-variant/60">
+<span class="px-1 border border-white/20 rounded">CMD</span>
+<span>+</span>
+<span class="px-1 border border-white/20 rounded">K</span>
+</div>
+</div>
+</body></html>
