@@ -7,8 +7,8 @@
         "Topic": "NumPy",
         "Task": "Learn NumPy, practice and implement",
         "Resource": "https://pandas.pydata.org/docs/",
-        "Status": "Pending",
-        "Done?": "No",
+        "Status": "Completed",
+        "Done?": "Yes",
         "Hours": null,
         "Notes": null
     },

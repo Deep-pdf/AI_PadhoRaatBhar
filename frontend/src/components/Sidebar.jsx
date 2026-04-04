@@ -29,6 +29,10 @@ export default function Sidebar({ currentView, setCurrentView }) {
                     <span className="material-symbols-outlined">auto_stories</span>
                     <span className="text-sm font-medium">Learning Paths</span>
                 </button>
+                <button onClick={() => setCurrentView('practice')} className={`w-full flex items-center gap-3 px-4 py-2.5 transition-all rounded-lg ${currentView === 'practice' ? 'bg-[#201F20] text-[#d3bbff] shadow-[0_0_15px_rgba(109,40,217,0.3)]' : 'text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100'}`}>
+                    <span className="material-symbols-outlined">terminal</span>
+                    <span className="text-sm font-medium">Practice</span>
+                </button>
                 <a className="flex items-center gap-3 px-4 py-2.5 text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100 transition-all rounded-lg group" href="#">
                     <span className="material-symbols-outlined">memory</span>
                     <span className="text-sm font-medium">Neural Logs</span>

@@ -49,3 +49,19 @@
 .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
+
+/* Syntax highlighting for code blocks */
+.syntax-keyword { color: #d3bbff; }
+.syntax-func    { color: #adc6ff; }
+.syntax-comment { color: #4a4455; }
+.syntax-string  { color: #ddb7ff; }
+
+/* Neon glow hover effects */
+.neon-glow-primary:hover {
+    box-shadow: 0 0 15px rgba(109, 40, 217, 0.3);
+    border-color: rgba(109, 40, 217, 0.5);
+}
+.neon-glow-secondary:hover {
+    box-shadow: 0 0 15px rgba(5, 102, 217, 0.3);
+    border-color: rgba(5, 102, 217, 0.5);
+}

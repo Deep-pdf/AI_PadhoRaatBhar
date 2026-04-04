@@ -13,6 +13,7 @@ export default function TopNav({ currentView, setCurrentView }) {
                 <nav className="hidden lg:flex gap-6 items-center h-full ml-4">
                     <button onClick={() => setCurrentView('dashboard')} className={currentView === 'dashboard' ? "text-[#d3bbff] border-b-2 border-[#6d28d9] pb-1 font-medium px-2 py-1" : "text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded"}>Dashboard</button>
                     <button onClick={() => setCurrentView('learning_paths')} className={currentView === 'learning_paths' ? "text-[#d3bbff] border-b-2 border-[#6d28d9] pb-1 font-medium px-2 py-1" : "text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded"}>Curriculum</button>
+                    <button onClick={() => setCurrentView('practice')} className={currentView === 'practice' ? "text-[#d3bbff] border-b-2 border-[#6d28d9] pb-1 font-medium px-2 py-1" : "text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded"}>Practice</button>
                     <a className="text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded" href="#">Playground</a>
                     <a className="text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded" href="#">Settings</a>
                 </nav>

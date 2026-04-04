@@ -5,6 +5,7 @@ import HeroMission from './components/HeroMission';
 import StatsGrid from './components/StatsGrid';
 import DataTable from './components/DataTable';
 import CurriculumView from './components/CurriculumView';
+import DailyPractice from './components/DailyPractice';
 
 const API_BASE = 'http://localhost:8000';
 
@@ -92,9 +93,11 @@ function App() {
                     {/* Read-only table for Dashboard */}
                     <DataTable tasks={allTasks} onComplete={() => {}} readOnly={true} />
                 </>
-            ) : (
+            ) : currentView === 'learning_paths' ? (
                 <CurriculumView tasks={allTasks} onComplete={handleCompleteTask} onUndo={handleUndoTask} stats={stats} />
-            )}
+            ) : currentView === 'practice' ? (
+                <DailyPractice />
+            ) : null}
             
             {/* Footer */}
             <footer className="w-full mt-auto py-12 flex flex-col items-center gap-4 px-8 border-t border-[#4a4455]/20 bg-[#0A0A0B] rounded-2xl mb-8">
