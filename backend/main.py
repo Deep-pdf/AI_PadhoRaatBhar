@@ -7,6 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import math
 
+from practice_generator import generate_practice
+
 app = FastAPI(title="AI/ML Learning Tracker API")
 
 # Setup CORS
@@ -59,38 +61,56 @@ def save_data(data):
 # Load data at startup
 tasks_data = load_data()
 
+
+def _resolve_today_or_next_pending():
+    """Same row selection as the dashboard: today's date, else first pending task."""
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    for task in tasks_data:
+        if str(task.get("Date", "")).startswith(today_str):
+            return task
+    for task in tasks_data:
+        if task.get("Done?") != "Yes":
+            return task
+    return None
+
+
 @app.get("/all")
 def get_all_tasks():
     return tasks_data
 
 @app.get("/today")
 def get_today_task():
-    today_str = datetime.now().strftime("%Y-%m-%d")
-    for task in tasks_data:
-        # Date formats might be simple strings, try matching
-        if str(task.get('Date', '')).startswith(today_str):
-            return {
-                "Date": task.get("Date"),
-                "Topic": task.get("Topic"),
-                "Task": task.get("Task"),
-                "Resource": task.get("Resource"),
-                "Status": task.get("Status"),
-                "Done?": task.get("Done?")
-            }
-    
-    # If no task matches today's exact date, find the first upcoming or pending task
-    for task in tasks_data:
-        if task.get("Done?") != "Yes":
-           return {
-                "Date": task.get("Date"),
-                "Topic": task.get("Topic"),
-                "Task": task.get("Task"),
-                "Resource": task.get("Resource"),
-                "Status": task.get("Status"),
-                "Done?": task.get("Done?")
-            }
-            
-    return {"message": "No task for today or pending tasks found."}
+    task = _resolve_today_or_next_pending()
+    if task is None:
+        return {"message": "No task for today or pending tasks found."}
+    return {
+        "Date": task.get("Date"),
+        "Topic": task.get("Topic"),
+        "Task": task.get("Task"),
+        "Resource": task.get("Resource"),
+        "Status": task.get("Status"),
+        "Done?": task.get("Done?"),
+    }
+
+
+@app.get("/practice")
+def get_practice():
+    task = _resolve_today_or_next_pending()
+    if task is None:
+        raise HTTPException(
+            status_code=404,
+            detail="No task for today or pending tasks found.",
+        )
+    topic = task.get("Topic") or "General"
+    content = generate_practice(topic)
+    raw_date = str(task.get("Date", ""))
+    date_out = raw_date[:10] if len(raw_date) >= 10 else raw_date
+    return {
+        "date": date_out,
+        "topic": topic,
+        "questions": content["questions"],
+        "code": content["code"],
+    }
 
 class CompleteRequest(BaseModel):
     date: str

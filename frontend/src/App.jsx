@@ -96,7 +96,7 @@ function App() {
             ) : currentView === 'learning_paths' ? (
                 <CurriculumView tasks={allTasks} onComplete={handleCompleteTask} onUndo={handleUndoTask} stats={stats} />
             ) : currentView === 'practice' ? (
-                <DailyPractice />
+                <DailyPractice apiBase={API_BASE} onMarkPracticed={handleCompleteTask} />
             ) : null}
             
             {/* Footer */}
