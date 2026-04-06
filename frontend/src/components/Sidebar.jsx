@@ -9,6 +9,7 @@ export default function Sidebar({
     recentPlans = [],
     activePlanId,
     onLoadPlan,
+    onDeletePlan,
 }) {
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -21,8 +22,8 @@ export default function Sidebar({
     };
 
     return (
-        <aside className="fixed left-0 top-0 h-full w-64 z-40 bg-[#0E0E0F] flex flex-col py-6 px-4 hidden lg:flex pt-20 border-r border-[#4a4455]/20">
-            <div className="mb-8 px-2">
+        <aside className="fixed left-0 top-0 h-full w-64 z-40 bg-[#0E0E0F] flex flex-col py-5 px-4 hidden lg:flex border-r border-[#4a4455]/20">
+            <div className="mb-6 px-2">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center text-primary shadow-lg">
                         <span className="material-symbols-outlined">memory</span>
@@ -34,7 +35,7 @@ export default function Sidebar({
                 </div>
             </div>
             
-            <div className="mb-8" onDragOver={handleDragOver} onDrop={handleDrop}>
+            <div className="mb-6" onDragOver={handleDragOver} onDrop={handleDrop}>
                 <button
                     onClick={onNewTrainingRun}
                     className="w-full py-3 px-4 rounded-xl bg-gradient-to-br from-primary-container to-secondary-container text-white font-semibold text-sm flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(109,40,217,0.4)] transition-all active:scale-95"
@@ -47,7 +48,7 @@ export default function Sidebar({
                 </p>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-5">
                 <p className="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase mb-3 px-1">Recent Plans</p>
                 <div className="space-y-2">
                     {recentPlans.length === 0 ? (
@@ -64,16 +65,34 @@ export default function Sidebar({
                                         : 'border-outline-variant/20 bg-surface-container-low'
                                 }`}
                             >
-                                <p className="text-xs text-white font-medium truncate" title={plan.name}>{plan.name}</p>
+                                <div className="flex items-start justify-between gap-2">
+                                    <p className="text-xs text-white font-medium truncate" title={plan.name}>{plan.name}</p>
+                                    <button
+                                        type="button"
+                                        onClick={() => onDeletePlan && onDeletePlan(plan.id)}
+                                        className="text-on-surface-variant/70 hover:text-red-400 transition-colors -mt-0.5"
+                                        title="Delete plan"
+                                        aria-label={`Delete ${plan.name}`}
+                                    >
+                                        <span className="material-symbols-outlined text-sm">delete</span>
+                                    </button>
+                                </div>
                                 <p className="text-[0.65rem] text-on-surface-variant/70 mt-1">
                                     {formatDateDDMMYYYY((plan.uploadDate || '').slice(0, 10))}
                                 </p>
-                                <button
-                                    onClick={() => onLoadPlan && onLoadPlan(plan.id)}
-                                    className="mt-2 text-[0.65rem] font-bold uppercase tracking-wider text-primary hover:text-white transition-colors"
-                                >
-                                    Load Plan
-                                </button>
+                                <div className="mt-2 flex items-center justify-between">
+                                    <button
+                                        onClick={() => onLoadPlan && onLoadPlan(plan.id)}
+                                        className="text-[0.65rem] font-bold uppercase tracking-wider text-primary hover:text-white transition-colors"
+                                    >
+                                        Load Plan
+                                    </button>
+                                    {plan.id === activePlanId && (
+                                        <span className="text-[0.6rem] font-bold uppercase tracking-wider text-primary/80">
+                                            Active
+                                        </span>
+                                    )}
+                                </div>
                             </div>
                         ))
                     )}

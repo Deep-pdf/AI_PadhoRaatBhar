@@ -212,6 +212,41 @@ function App() {
     await activatePlan(plan);
   };
 
+  const deletePlanById = async (id) => {
+    const plan = plans.find((p) => p.id === id);
+    if (!plan) return;
+    const ok = window.confirm(`Delete plan "${plan.name}"? This cannot be undone.`);
+    if (!ok) return;
+
+    const nextPlans = plans.filter((p) => p.id !== id);
+    setPlans(nextPlans);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextPlans));
+
+    const wasActive = String(activePlanId) === String(id);
+    if (!wasActive) return;
+
+    const nextActive = nextPlans[0];
+    if (nextActive) {
+      await activatePlan(nextActive);
+      return;
+    }
+
+    setActivePlanId('');
+    localStorage.removeItem(ACTIVE_PLAN_KEY);
+    setTodayTask(null);
+    setAllTasks([]);
+    setStats({ total_days: 0, completed_days: 0, remaining_days: 0, progress_percentage: 0, current_streak: 0 });
+    try {
+      await fetch(`${API_BASE}/set-active-plan`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tasks: [] }),
+      });
+    } catch {
+      // ignore
+    }
+  };
+
   return (
     <div className="flex min-h-screen overflow-x-hidden font-body bg-[#0E0E0F]">
       <input
@@ -229,6 +264,7 @@ function App() {
         recentPlans={plans}
         activePlanId={activePlanId}
         onLoadPlan={loadPlanById}
+        onDeletePlan={deletePlanById}
       />
       <main className="flex-1 lg:ml-64 flex flex-col min-h-screen relative z-10">
         <TopNav currentView={currentView} setCurrentView={setCurrentView} />
