@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatDateDDMMYYYY } from '../utils/dateFormat';
 
 export default function DataTable({ tasks, onComplete, onUndo, readOnly = false }) {
     if (!tasks || tasks.length === 0) return null;
@@ -49,7 +50,7 @@ export default function DataTable({ tasks, onComplete, onUndo, readOnly = false 
                             return (
                                 <tr key={idx} className={`hover:bg-surface-bright/30 transition-colors group ${isCompleted ? 'opacity-70' : ''}`}>
                                     <td className="px-6 py-4 text-sm font-medium text-on-surface-variant whitespace-nowrap">
-                                        {task.Date}
+                                        {formatDateDDMMYYYY(task.Date)}
                                     </td>
                                     <td className="px-6 py-4 text-sm text-on-surface-variant/60">
                                         {task.Day}

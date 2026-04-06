@@ -1,14 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-
-function formatDisplayDate(isoDate) {
-    if (!isoDate || isoDate.length < 10) return isoDate || '';
-    const d = new Date(`${isoDate.slice(0, 10)}T12:00:00`);
-    return d.toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
-}
+import { formatDateDDMMYYYY } from '../utils/dateFormat';
 
 export default function DailyPractice({ apiBase, onMarkPracticed }) {
     const [practice, setPractice] = useState(null);
@@ -133,7 +124,7 @@ export default function DailyPractice({ apiBase, onMarkPracticed }) {
                             </div>
                             <div className="text-right">
                                 <span className="text-[0.875rem] font-mono text-on-surface-variant bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/10">
-                                    {formatDisplayDate(practice.date)}
+                                    {formatDateDDMMYYYY(practice.date)}
                                 </span>
                             </div>
                         </div>

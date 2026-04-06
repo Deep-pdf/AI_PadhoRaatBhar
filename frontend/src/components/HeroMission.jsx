@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatDateDDMMYYYY } from '../utils/dateFormat';
 
 export default function HeroMission({ todayTask, progress }) {
     if (!todayTask) {
@@ -35,7 +36,7 @@ export default function HeroMission({ todayTask, progress }) {
                         <span className="px-3 py-1 bg-surface-container-high text-primary text-[0.6875rem] font-bold uppercase tracking-widest rounded-full">
                             Active Mission
                         </span>
-                        <span className="text-on-surface-variant/60 text-sm font-medium">{todayTask.Date}</span>
+                        <span className="text-on-surface-variant/60 text-sm font-medium">{formatDateDDMMYYYY(todayTask.Date)}</span>
                     </div>
                     
                     <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tighter mb-4 leading-tight">
