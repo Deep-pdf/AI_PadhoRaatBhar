@@ -1,11 +1,11 @@
 import React from 'react';
 import DataTable from './DataTable';
 
-export default function CurriculumView({ tasks, onComplete, onUndo, stats }) {
+export default function CurriculumView({ tasks, onComplete, onUndo, stats, highlightedDate }) {
     if (!stats) return null;
 
     // Calculate current focus (first pending task)
-    const currentFocusTask = tasks?.find(t => t['Done?'] !== 'Yes');
+    const currentFocusTask = tasks?.find(t => t['Done?'] !== 'Yes' && t['Done?'] !== true);
 
     return (
         <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 mt-8 md:mt-2">
@@ -57,7 +57,7 @@ export default function CurriculumView({ tasks, onComplete, onUndo, stats }) {
             </div>
 
             {/* The Interactive Interactive DataTable */}
-            <DataTable tasks={tasks} onComplete={onComplete} onUndo={onUndo} readOnly={false} />
+            <DataTable tasks={tasks} onComplete={onComplete} onUndo={onUndo} readOnly={false} highlightedDate={highlightedDate} />
             
         </div>
     );

@@ -1,6 +1,25 @@
 import React from 'react';
+import { formatDateDDMMYYYY } from '../utils/dateFormat';
 
-export default function Sidebar({ currentView, setCurrentView }) {
+export default function Sidebar({
+    currentView,
+    setCurrentView,
+    onNewTrainingRun,
+    onDropFile,
+    recentPlans = [],
+    activePlanId,
+    onLoadPlan,
+}) {
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer?.files?.[0];
+        if (file && onDropFile) onDropFile(file);
+    };
+
     return (
         <aside className="fixed left-0 top-0 h-full w-64 z-40 bg-[#0E0E0F] flex flex-col py-6 px-4 hidden lg:flex pt-20 border-r border-[#4a4455]/20">
             <div className="mb-8 px-2">
@@ -15,10 +34,51 @@ export default function Sidebar({ currentView, setCurrentView }) {
                 </div>
             </div>
             
-            <button className="mb-8 w-full py-3 px-4 rounded-xl bg-gradient-to-br from-primary-container to-secondary-container text-white font-semibold text-sm flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(109,40,217,0.4)] transition-all active:scale-95">
-                <span className="material-symbols-outlined text-sm">add</span>
-                New Training Run
-            </button>
+            <div className="mb-8" onDragOver={handleDragOver} onDrop={handleDrop}>
+                <button
+                    onClick={onNewTrainingRun}
+                    className="w-full py-3 px-4 rounded-xl bg-gradient-to-br from-primary-container to-secondary-container text-white font-semibold text-sm flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(109,40,217,0.4)] transition-all active:scale-95"
+                >
+                    <span className="material-symbols-outlined text-sm">add</span>
+                    New Training Run
+                </button>
+                <p className="text-[0.65rem] text-on-surface-variant/60 mt-2 text-center">
+                    Click or drag & drop .xlsx/.csv
+                </p>
+            </div>
+
+            <div className="mb-6">
+                <p className="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase mb-3 px-1">Recent Plans</p>
+                <div className="space-y-2">
+                    {recentPlans.length === 0 ? (
+                        <div className="rounded-lg border border-outline-variant/20 p-3 text-xs text-on-surface-variant/70">
+                            No plans yet. Upload your first training file.
+                        </div>
+                    ) : (
+                        recentPlans.map((plan) => (
+                            <div
+                                key={plan.id}
+                                className={`rounded-lg border p-3 transition-all ${
+                                    plan.id === activePlanId
+                                        ? 'border-primary/60 bg-primary/10'
+                                        : 'border-outline-variant/20 bg-surface-container-low'
+                                }`}
+                            >
+                                <p className="text-xs text-white font-medium truncate" title={plan.name}>{plan.name}</p>
+                                <p className="text-[0.65rem] text-on-surface-variant/70 mt-1">
+                                    {formatDateDDMMYYYY((plan.uploadDate || '').slice(0, 10))}
+                                </p>
+                                <button
+                                    onClick={() => onLoadPlan && onLoadPlan(plan.id)}
+                                    className="mt-2 text-[0.65rem] font-bold uppercase tracking-wider text-primary hover:text-white transition-colors"
+                                >
+                                    Load Plan
+                                </button>
+                            </div>
+                        ))
+                    )}
+                </div>
+            </div>
             
             <nav className="flex-1 space-y-1">
                 <button onClick={() => setCurrentView('dashboard')} className={`w-full flex items-center gap-3 px-4 py-2.5 transition-all rounded-lg group ${currentView === 'dashboard' ? 'bg-[#201F20] text-[#d3bbff] shadow-[0_0_15px_rgba(109,40,217,0.3)]' : 'text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100'}`}>

@@ -1,7 +1,11 @@
 import React from 'react';
 import { formatDateDDMMYYYY } from '../utils/dateFormat';
 
-export default function DataTable({ tasks, onComplete, onUndo, readOnly = false }) {
+function isDone(task) {
+    return task?.['Done?'] === true || task?.['Done?'] === 'Yes';
+}
+
+export default function DataTable({ tasks, onComplete, onUndo, readOnly = false, highlightedDate = '' }) {
     if (!tasks || tasks.length === 0) return null;
     
     // Sort logic could go here if needed, but assuming server sends them ordered or chronologically
@@ -45,10 +49,11 @@ export default function DataTable({ tasks, onComplete, onUndo, readOnly = false 
                     </thead>
                     <tbody className="divide-y divide-outline-variant/5">
                         {tasks.map((task, idx) => {
-                            const isCompleted = task['Done?'] === 'Yes';
+                            const isCompleted = isDone(task);
+                            const isTodayRow = highlightedDate && String(task.Date) === String(highlightedDate);
                             
                             return (
-                                <tr key={idx} className={`hover:bg-surface-bright/30 transition-colors group ${isCompleted ? 'opacity-70' : ''}`}>
+                                <tr key={idx} className={`hover:bg-surface-bright/30 transition-colors group ${isCompleted ? 'opacity-70' : ''} ${isTodayRow ? 'bg-primary/10' : ''}`}>
                                     <td className="px-6 py-4 text-sm font-medium text-on-surface-variant whitespace-nowrap">
                                         {formatDateDDMMYYYY(task.Date)}
                                     </td>

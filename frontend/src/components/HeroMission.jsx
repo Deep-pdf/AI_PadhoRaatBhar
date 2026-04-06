@@ -2,6 +2,7 @@ import React from 'react';
 import { formatDateDDMMYYYY } from '../utils/dateFormat';
 
 export default function HeroMission({ todayTask, progress }) {
+    const isCompleted = todayTask?.['Done?'] === true || todayTask?.['Done?'] === 'Yes';
     if (!todayTask) {
         return (
             <section className="glass-card rounded-[2rem] p-10 flex min-h-[200px] items-center justify-center">
@@ -50,7 +51,7 @@ export default function HeroMission({ todayTask, progress }) {
                 </div>
                 
                 <div className="relative z-10 flex flex-wrap gap-4 items-center">
-                    {todayTask['Done?'] === 'Yes' ? (
+                    {isCompleted ? (
                         <button className="px-8 py-4 rounded-xl bg-green-500/20 text-green-400 font-bold border border-green-500/30 cursor-not-allowed">
                             Mission Completed
                         </button>

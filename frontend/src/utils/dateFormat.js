@@ -30,20 +30,15 @@ function parseMixedDate(input) {
     let year;
 
     if (parts[0].length === 4) {
+        // Internal/API format YYYY-MM-DD.
         year = a;
-        // Input like YYYY-DD-MM or YYYY-MM-DD (mixed source formats)
-        if (b > 12 && c <= 12) {
-            day = b;
-            month = c;
-        } else {
-            day = c;
-            month = b;
-        }
+        month = b;
+        day = c;
     } else if (parts[2].length === 4) {
-        year = c;
-        // Prefer DD-MM-YYYY style for consistency with existing sheet intent
+        // Day-first input/output format DD-MM-YYYY.
         day = a;
         month = b;
+        year = c;
     } else {
         return null;
     }
