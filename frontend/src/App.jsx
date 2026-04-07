@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Sidebar from './components/Sidebar';
 import TopNav from './components/TopNav';
+import MobileBottomNav from './components/MobileBottomNav';
 import HeroMission from './components/HeroMission';
 import StatsGrid from './components/StatsGrid';
 import DataTable from './components/DataTable';
@@ -267,16 +268,24 @@ function App() {
         onDeletePlan={deletePlanById}
       />
       <main className="flex-1 lg:ml-64 flex flex-col min-h-screen relative z-10">
-        <TopNav currentView={currentView} setCurrentView={setCurrentView} />
-        <div className="mt-16 p-6 md:p-8 space-y-8 max-w-7xl mx-auto w-full">
+        <TopNav
+          currentView={currentView}
+          setCurrentView={setCurrentView}
+          onNewTrainingRun={openFilePicker}
+          recentPlans={plans}
+          activePlanId={activePlanId}
+          onLoadPlan={loadPlanById}
+          onDeletePlan={deletePlanById}
+        />
+        <div className="mt-16 p-4 md:p-6 lg:p-8 space-y-5 md:space-y-8 max-w-7xl mx-auto w-full pb-24 lg:pb-8">
             {loading ? (
                 <div className="flex items-center justify-center min-h-[400px]">
                     <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin shadow-[0_0_15px_rgba(109,40,217,0.5)]"></div>
                 </div>
             ) : plans.length === 0 ? (
-                <section className="glass-card rounded-[2rem] p-10 text-center">
-                  <h2 className="text-3xl font-extrabold text-white tracking-tighter mb-3">Start a New Training Run</h2>
-                  <p className="text-on-surface-variant mb-6">Upload a CSV or XLSX using the sidebar button. You can store up to 3 recent plans locally.</p>
+                <section className="glass-card rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-10 text-center">
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tighter mb-3">Start a New Training Run</h2>
+                  <p className="text-on-surface-variant text-sm mb-6">Upload a CSV or XLSX. You can store up to 3 recent plans locally.</p>
                   <button onClick={openFilePicker} className="px-6 py-3 rounded-xl bg-gradient-to-br from-primary-container to-secondary-container text-white font-semibold">
                     New Training Run
                   </button>
@@ -300,19 +309,25 @@ function App() {
               </div>
             )}
             
-            {/* Footer */}
-            <footer className="w-full mt-auto py-12 flex flex-col items-center gap-4 px-8 border-t border-[#4a4455]/20 bg-[#0A0A0B] rounded-2xl mb-8">
-                <div className="flex gap-8">
-                    <a className="text-[#4a4455] text-[0.6875rem] font-bold uppercase tracking-widest hover:text-[#adc6ff] transition-colors hover:underline underline-offset-4" href="#">Privacy Policy</a>
-                    <a className="text-[#4a4455] text-[0.6875rem] font-bold uppercase tracking-widest hover:text-[#adc6ff] transition-colors hover:underline underline-offset-4" href="#">Terms of Service</a>
-                    <a className="text-[#4a4455] text-[0.6875rem] font-bold uppercase tracking-widest hover:text-[#adc6ff] transition-colors hover:underline underline-offset-4" href="#">Changelog</a>
+            <footer className="w-full mt-auto py-8 md:py-12 flex flex-col items-center gap-3 md:gap-4 px-4 md:px-8 border-t border-[#4a4455]/20 bg-[#0A0A0B] rounded-2xl mb-4 md:mb-8">
+                <div className="flex gap-4 md:gap-8 flex-wrap justify-center">
+                    <a className="text-[#4a4455] text-[0.6rem] md:text-[0.6875rem] font-bold uppercase tracking-widest hover:text-[#adc6ff] transition-colors" href="#">Privacy Policy</a>
+                    <a className="text-[#4a4455] text-[0.6rem] md:text-[0.6875rem] font-bold uppercase tracking-widest hover:text-[#adc6ff] transition-colors" href="#">Terms of Service</a>
+                    <a className="text-[#4a4455] text-[0.6rem] md:text-[0.6875rem] font-bold uppercase tracking-widest hover:text-[#adc6ff] transition-colors" href="#">Changelog</a>
                 </div>
-                <p className="text-[#4a4455] text-[0.6875rem] font-bold uppercase tracking-widest">
+                <p className="text-[#4a4455] text-[0.6rem] md:text-[0.6875rem] font-bold uppercase tracking-widest text-center">
                     © 2026 Neural Void Systems. Powered by Inter
                 </p>
             </footer>
         </div>
       </main>
+
+      {/* Mobile bottom nav — hidden on desktop */}
+      <MobileBottomNav
+        currentView={currentView}
+        setCurrentView={setCurrentView}
+        onNewTrainingRun={openFilePicker}
+      />
 
       {previewPayload && (
         <div className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">

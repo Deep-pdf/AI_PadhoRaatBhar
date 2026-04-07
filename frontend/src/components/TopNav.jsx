@@ -1,35 +1,220 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export default function TopNav({ currentView, setCurrentView }) {
+/**
+ * TopNav — desktop: full nav bar with search + tabs.
+ * Mobile: logo, hamburger → slide-in drawer (plans, upload, nav links).
+ */
+export default function TopNav({
+    currentView,
+    setCurrentView,
+    onNewTrainingRun,
+    recentPlans = [],
+    activePlanId,
+    onLoadPlan,
+    onDeletePlan,
+}) {
+    const [drawerOpen, setDrawerOpen] = useState(false);
+
+    const navTo = (view) => {
+        setCurrentView(view);
+        setDrawerOpen(false);
+    };
+
     return (
-        <header className="fixed top-0 w-full z-50 bg-[#131314] flex justify-between items-center px-8 h-16 max-w-full ghost-border">
-            <div className="flex items-center gap-8">
-                <span className="text-xl font-bold tracking-tighter text-[#d3bbff] lg:hidden">AI Tracker</span>
-                <div className="relative w-64 hidden lg:block ml-12 lg:ml-64">
-                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
-                    <input className="w-full bg-[#1C1B1C] border-none rounded-lg pl-10 pr-4 py-1.5 text-sm focus:ring-1 focus:ring-primary outline-none" placeholder="Search architecture..." type="text"/>
+        <>
+            <header className="fixed top-0 left-0 right-0 z-50 bg-[#131314] flex justify-between items-center px-4 md:px-8 h-16 ghost-border">
+                {/* Left: brand (mobile) + search (desktop) */}
+                <div className="flex items-center gap-4">
+                    {/* Brand — always visible on mobile */}
+                    <div className="flex items-center gap-2 lg:hidden">
+                        <div className="w-8 h-8 bg-primary-container rounded-lg flex items-center justify-center text-primary">
+                            <span className="material-symbols-outlined text-[1.1rem]">memory</span>
+                        </div>
+                        <span className="text-lg font-black tracking-tighter text-[#d3bbff]">AI Tracker</span>
+                    </div>
+
+                    {/* Search — desktop only */}
+                    <div className="relative w-64 hidden lg:block ml-64">
+                        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+                        <input
+                            className="w-full bg-[#1C1B1C] border-none rounded-lg pl-10 pr-4 py-1.5 text-sm focus:ring-1 focus:ring-primary outline-none"
+                            placeholder="Search architecture..."
+                            type="text"
+                        />
+                    </div>
+
+                    {/* Desktop nav tabs */}
+                    <nav className="hidden lg:flex gap-6 items-center h-full ml-4">
+                        {[
+                            { id: 'dashboard',      label: 'Dashboard'  },
+                            { id: 'learning_paths', label: 'Curriculum' },
+                            { id: 'practice',       label: 'Practice'   },
+                        ].map(({ id, label }) => (
+                            <button
+                                key={id}
+                                onClick={() => setCurrentView(id)}
+                                className={
+                                    currentView === id
+                                        ? 'text-[#d3bbff] border-b-2 border-[#6d28d9] pb-1 font-medium px-2 py-1'
+                                        : 'text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded'
+                                }
+                            >
+                                {label}
+                            </button>
+                        ))}
+                        <a className="text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded" href="#">Playground</a>
+                        <a className="text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded" href="#">Settings</a>
+                    </nav>
                 </div>
-                
-                <nav className="hidden lg:flex gap-6 items-center h-full ml-4">
-                    <button onClick={() => setCurrentView('dashboard')} className={currentView === 'dashboard' ? "text-[#d3bbff] border-b-2 border-[#6d28d9] pb-1 font-medium px-2 py-1" : "text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded"}>Dashboard</button>
-                    <button onClick={() => setCurrentView('learning_paths')} className={currentView === 'learning_paths' ? "text-[#d3bbff] border-b-2 border-[#6d28d9] pb-1 font-medium px-2 py-1" : "text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded"}>Curriculum</button>
-                    <button onClick={() => setCurrentView('practice')} className={currentView === 'practice' ? "text-[#d3bbff] border-b-2 border-[#6d28d9] pb-1 font-medium px-2 py-1" : "text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded"}>Practice</button>
-                    <a className="text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded" href="#">Playground</a>
-                    <a className="text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded" href="#">Settings</a>
+
+                {/* Right: icons + hamburger */}
+                <div className="flex items-center gap-2 md:gap-3">
+                    <button className="p-2 text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] rounded-full transition-colors hidden md:flex">
+                        <span className="material-symbols-outlined">notifications</span>
+                    </button>
+                    <button className="p-2 text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] rounded-full transition-colors hidden md:flex">
+                        <span className="material-symbols-outlined">terminal</span>
+                    </button>
+                    <div className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant hidden sm:block">
+                        <img alt="User Profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvhx_lJcF37wDccZKT3v62yJCBreX2p2fhaFsVeSRKeatOOkDBAJCwXwyhWXzW3GU4QqvZJj282ZKlWtY2x0Vj7FLTDqaeTAbGePykxlKuJ0gHXMktlvVeG3SyyeL9UmJKl-VP9J0Q6hKRkU5ND1I5Z4a7IIpclG_cd71eDsK55ejRXyzXjwdH2XK2wO6tXdYv3Fy3aKhFwU2sx0jRKOWcaTRvVfubi2dEh9hATlflYseJ3lT9KsD7DqYr3iN3_xIRp5hkH6VU-Cd-" />
+                    </div>
+
+                    {/* Hamburger — mobile only */}
+                    <button
+                        id="mobile-menu-toggle"
+                        className="lg:hidden p-2 rounded-lg text-[#ccc3d7] hover:bg-[#201F20] transition-colors"
+                        onClick={() => setDrawerOpen(true)}
+                        aria-label="Open menu"
+                    >
+                        <span className="material-symbols-outlined">menu</span>
+                    </button>
+                </div>
+            </header>
+
+            {/* ── Mobile Drawer ── */}
+            {/* Backdrop */}
+            {drawerOpen && (
+                <div
+                    className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm lg:hidden"
+                    onClick={() => setDrawerOpen(false)}
+                />
+            )}
+
+            {/* Slide-in panel */}
+            <aside
+                className="fixed top-0 right-0 bottom-0 z-[70] lg:hidden w-72 flex flex-col py-6 px-5 overflow-y-auto transition-transform duration-300"
+                style={{
+                    background: 'rgba(13,13,14,0.97)',
+                    backdropFilter: 'blur(24px)',
+                    borderLeft: '1px solid rgba(149,141,161,0.12)',
+                    transform: drawerOpen ? 'translateX(0)' : 'translateX(100%)',
+                }}
+                aria-hidden={!drawerOpen}
+            >
+                {/* Drawer header */}
+                <div className="flex justify-between items-center mb-6">
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-primary-container rounded-lg flex items-center justify-center text-primary">
+                            <span className="material-symbols-outlined text-[1.1rem]">memory</span>
+                        </div>
+                        <span className="text-base font-black tracking-tighter text-[#d3bbff]">AI Tracker</span>
+                    </div>
+                    <button
+                        id="mobile-menu-close"
+                        onClick={() => setDrawerOpen(false)}
+                        className="p-2 rounded-lg text-[#ccc3d7] hover:bg-[#201F20] transition-colors"
+                        aria-label="Close menu"
+                    >
+                        <span className="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+
+                {/* Upload button */}
+                <button
+                    onClick={() => { onNewTrainingRun?.(); setDrawerOpen(false); }}
+                    className="w-full py-3 px-4 rounded-xl text-white font-semibold text-sm flex items-center justify-center gap-2 active:scale-95 transition-all mb-1"
+                    style={{ background: 'linear-gradient(135deg, #6d28d9 0%, #0566d9 100%)' }}
+                >
+                    <span className="material-symbols-outlined text-sm">add</span>
+                    New Training Run
+                </button>
+                <p className="text-[0.65rem] text-on-surface-variant/60 text-center mb-5">Click or drag &amp; drop .xlsx/.csv</p>
+
+                {/* Recent Plans */}
+                {recentPlans.length > 0 && (
+                    <div className="mb-5">
+                        <p className="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase mb-3 px-1">Recent Plans</p>
+                        <div className="space-y-2">
+                            {recentPlans.map((plan) => (
+                                <div
+                                    key={plan.id}
+                                    className={`rounded-lg border p-3 transition-all ${
+                                        plan.id === activePlanId
+                                            ? 'border-primary/60 bg-primary/10'
+                                            : 'border-outline-variant/20 bg-surface-container-low'
+                                    }`}
+                                >
+                                    <div className="flex items-start justify-between gap-2">
+                                        <p className="text-xs text-white font-medium truncate">{plan.name}</p>
+                                        <button
+                                            onClick={() => { onDeletePlan?.(plan.id); }}
+                                            className="text-on-surface-variant/70 hover:text-red-400 transition-colors"
+                                            aria-label={`Delete ${plan.name}`}
+                                        >
+                                            <span className="material-symbols-outlined text-sm">delete</span>
+                                        </button>
+                                    </div>
+                                    <div className="mt-2 flex items-center justify-between">
+                                        <button
+                                            onClick={() => { onLoadPlan?.(plan.id); setDrawerOpen(false); }}
+                                            className="text-[0.65rem] font-bold uppercase tracking-wider text-primary hover:text-white transition-colors"
+                                        >
+                                            Load Plan
+                                        </button>
+                                        {plan.id === activePlanId && (
+                                            <span className="text-[0.6rem] font-bold uppercase tracking-wider text-primary/80">Active</span>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Nav items */}
+                <nav className="flex-1 space-y-1">
+                    {[
+                        { id: 'dashboard',      icon: 'dashboard',      label: 'Overview'   },
+                        { id: 'learning_paths', icon: 'auto_stories',   label: 'Learning Paths' },
+                        { id: 'practice',       icon: 'terminal',       label: 'Practice'   },
+                    ].map(({ id, icon, label }) => (
+                        <button
+                            key={id}
+                            onClick={() => navTo(id)}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all text-left ${
+                                currentView === id
+                                    ? 'bg-[#201F20] text-[#d3bbff] shadow-[0_0_15px_rgba(109,40,217,0.3)]'
+                                    : 'text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100'
+                            }`}
+                        >
+                            <span className="material-symbols-outlined">{icon}</span>
+                            <span className="text-sm font-medium">{label}</span>
+                        </button>
+                    ))}
                 </nav>
-            </div>
-            
-            <div className="flex items-center gap-4">
-                <button className="p-2 text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] rounded-full transition-colors hidden md:block">
-                    <span className="material-symbols-outlined">notifications</span>
-                </button>
-                <button className="p-2 text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] rounded-full transition-colors hidden md:block">
-                    <span className="material-symbols-outlined">terminal</span>
-                </button>
-                <div className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
-                    <img alt="User Profile Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvhx_lJcF37wDccZKT3v62yJCBreX2p2fhaFsVeSRKeatOOkDBAJCwXwyhWXzW3GU4QqvZJj282ZKlWtY2x0Vj7FLTDqaeTAbGePykxlKuJ0gHXMktlvVeG3SyyeL9UmJKl-VP9J0Q6hKRkU5ND1I5Z4a7IIpclG_cd71eDsK55ejRXyzXjwdH2XK2wO6tXdYv3Fy3aKhFwU2sx0jRKOWcaTRvVfubi2dEh9hATlflYseJ3lT9KsD7DqYr3iN3_xIRp5hkH6VU-Cd-" />
+
+                {/* Bottom links */}
+                <div className="mt-auto pt-4 border-t border-outline-variant/20 space-y-1">
+                    <a href="#" className="flex items-center gap-3 px-4 py-2 text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100 transition-all rounded-lg">
+                        <span className="material-symbols-outlined">description</span>
+                        <span className="text-sm">Documentation</span>
+                    </a>
+                    <a href="#" className="flex items-center gap-3 px-4 py-2 text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100 transition-all rounded-lg">
+                        <span className="material-symbols-outlined">help</span>
+                        <span className="text-sm">Support</span>
+                    </a>
                 </div>
-            </div>
-        </header>
+            </aside>
+        </>
     );
 }

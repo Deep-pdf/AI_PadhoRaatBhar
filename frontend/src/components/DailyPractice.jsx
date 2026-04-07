@@ -6,6 +6,7 @@ export default function DailyPractice({ apiBase, onMarkPracticed }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [copied, setCopied] = useState(false);
+    const [activeTab, setActiveTab] = useState('problem'); // mobile tab: 'problem' | 'code'
 
     const loadPractice = useCallback(async () => {
         setLoading(true);
@@ -28,9 +29,7 @@ export default function DailyPractice({ apiBase, onMarkPracticed }) {
         }
     }, [apiBase]);
 
-    useEffect(() => {
-        loadPractice();
-    }, [loadPractice]);
+    useEffect(() => { loadPractice(); }, [loadPractice]);
 
     const handleCopy = async () => {
         if (!practice?.code) return;
@@ -38,41 +37,31 @@ export default function DailyPractice({ apiBase, onMarkPracticed }) {
             await navigator.clipboard.writeText(practice.code);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
-        } catch {
-            setCopied(false);
-        }
+        } catch { setCopied(false); }
     };
 
     const handleShare = async () => {
         if (!practice?.code) return;
         if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: `Practice: ${practice.topic}`,
-                    text: practice.code,
-                });
-            } catch {
-                /* dismissed or failed */
-            }
-        } else {
-            handleCopy();
-        }
+            try { await navigator.share({ title: `Practice: ${practice.topic}`, text: practice.code }); }
+            catch { /* dismissed */ }
+        } else { handleCopy(); }
     };
 
     const handleMarkPracticed = () => {
-        if (practice?.date && onMarkPracticed) {
-            onMarkPracticed(practice.date);
-        }
+        if (practice?.date && onMarkPracticed) onMarkPracticed(practice.date);
     };
 
+    /* ── Loading ── */
     if (loading) {
         return (
-            <div className="w-full flex items-center justify-center min-h-[400px]">
+            <div className="w-full flex items-center justify-center min-h-[300px]">
                 <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin shadow-[0_0_15px_rgba(109,40,217,0.5)]" />
             </div>
         );
     }
 
+    /* ── Error ── */
     if (error || !practice) {
         return (
             <div className="w-full max-w-xl mx-auto text-center py-16">
@@ -90,54 +79,174 @@ export default function DailyPractice({ apiBase, onMarkPracticed }) {
 
     const tags = [practice.topic].filter(Boolean);
 
+    /* ── Action bar (shared) ── */
+    const ActionBar = ({ className = '' }) => (
+        <div className={`flex items-center gap-3 ${className}`}>
+            <button
+                type="button"
+                onClick={handleMarkPracticed}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm tracking-tight text-white active:scale-95 transition-all shadow-[0_0_20px_rgba(109,40,217,0.3)]"
+                style={{ background: 'linear-gradient(135deg, #6d28d9 0%, #0566d9 100%)' }}
+            >
+                <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                Mark Practiced
+            </button>
+            <button
+                type="button"
+                onClick={loadPractice}
+                className="w-10 h-10 flex items-center justify-center text-[#ccc3d7] hover:text-primary bg-surface-container rounded-full border border-outline-variant/20 transition-colors"
+                aria-label="Refresh practice"
+            >
+                <span className="material-symbols-outlined text-base">refresh</span>
+            </button>
+            <button
+                type="button"
+                onClick={handleShare}
+                className="w-10 h-10 flex items-center justify-center text-[#ccc3d7] hover:text-secondary bg-surface-container rounded-full border border-outline-variant/20 transition-colors"
+                aria-label="Share"
+            >
+                <span className="material-symbols-outlined text-base">share</span>
+            </button>
+        </div>
+    );
+
     return (
-        <div className="w-full">
-            <header className="mb-10 text-center md:text-left">
-                <h1 className="text-[3.5rem] font-black tracking-tight leading-none mb-2 text-on-surface">
+        <div className="w-full pb-28 lg:pb-6">
+            {/* Page header */}
+            <header className="mb-6 md:mb-10 text-center md:text-left">
+                <h1 className="text-3xl md:text-[3.5rem] font-black tracking-tight leading-none mb-2 text-on-surface">
                     Daily Practice
                 </h1>
-                <p className="text-[1rem] text-on-surface-variant font-medium opacity-80">
+                <p className="text-sm md:text-base text-on-surface-variant font-medium opacity-80">
                     Sharpen your skills with today&apos;s coding task
                 </p>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-24">
-                <section className="lg:col-span-12">
-                    <div className="relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-primary-container to-secondary-container rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
-                        <div className="relative bg-surface-container border border-outline-variant/20 p-8 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-6">
-                            <div className="flex items-center gap-6">
-                                <div className="w-16 h-16 bg-surface-container-high rounded-2xl flex items-center justify-center text-primary border border-primary/20">
-                                    <span
-                                        className="material-symbols-outlined text-3xl"
-                                        style={{ fontVariationSettings: "'FILL' 1" }}
-                                    >
-                                        auto_awesome
-                                    </span>
-                                </div>
-                                <div>
-                                    <span className="text-[0.6875rem] font-bold tracking-[0.2em] text-primary uppercase mb-1 block">
-                                        TODAY&apos;S TOPIC
-                                    </span>
-                                    <h2 className="text-[1.5rem] font-semibold text-on-surface">{practice.topic}</h2>
-                                </div>
-                            </div>
-                            <div className="text-right">
-                                <span className="text-[0.875rem] font-mono text-on-surface-variant bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/10">
-                                    {formatDateDDMMYYYY(practice.date)}
-                                </span>
-                            </div>
+            {/* Topic banner */}
+            <div className="relative group mb-5 md:mb-8">
+                <div className="absolute -inset-1 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"
+                     style={{ background: 'linear-gradient(135deg, #6d28d9, #0566d9)' }} />
+                <div className="relative bg-surface-container border border-outline-variant/20 p-5 md:p-8 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 md:w-16 md:h-16 bg-surface-container-high rounded-2xl flex items-center justify-center text-primary border border-primary/20 flex-shrink-0">
+                            <span className="material-symbols-outlined text-2xl md:text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                                auto_awesome
+                            </span>
+                        </div>
+                        <div>
+                            <span className="text-[0.6875rem] font-bold tracking-[0.2em] text-primary uppercase mb-1 block">
+                                TODAY'S TOPIC
+                            </span>
+                            <h2 className="text-lg md:text-[1.5rem] font-semibold text-on-surface leading-snug">
+                                {practice.topic}
+                            </h2>
                         </div>
                     </div>
-                </section>
+                    <span className="text-xs md:text-[0.875rem] font-mono text-on-surface-variant bg-surface-container-low px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-outline-variant/10 whitespace-nowrap">
+                        {formatDateDDMMYYYY(practice.date)}
+                    </span>
+                </div>
+            </div>
 
-                <section className="lg:col-span-5 h-full">
+            {/* ── Mobile: tab switcher ── */}
+            <div className="lg:hidden mb-4">
+                <div className="flex rounded-xl overflow-hidden border border-outline-variant/20 bg-surface-container">
+                    {[
+                        { id: 'problem', icon: 'quiz',    label: 'Problem'     },
+                        { id: 'code',    icon: 'code',    label: 'Sample Code' },
+                    ].map(({ id, icon, label }) => (
+                        <button
+                            key={id}
+                            onClick={() => setActiveTab(id)}
+                            className="flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-bold transition-all"
+                            style={{
+                                background: activeTab === id ? 'rgba(109,40,217,0.2)' : 'transparent',
+                                color: activeTab === id ? '#d3bbff' : '#958da1',
+                                borderBottom: activeTab === id ? '2px solid #6d28d9' : '2px solid transparent',
+                            }}
+                        >
+                            <span className="material-symbols-outlined text-base">{icon}</span>
+                            {label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* ── Mobile: Problem tab ── */}
+            <div className={`lg:hidden ${activeTab === 'problem' ? 'block' : 'hidden'}`}>
+                <div className="bg-surface-container border border-outline-variant/20 p-5 rounded-2xl neon-glow-secondary transition-all">
+                    <div className="flex items-center gap-2 mb-4">
+                        <span className="material-symbols-outlined text-secondary">quiz</span>
+                        <h3 className="text-xs font-bold text-on-surface uppercase tracking-widest">Problem</h3>
+                    </div>
+                    <ul className="text-on-surface text-sm leading-relaxed mb-6 flex-grow list-disc pl-5 space-y-2.5">
+                        {practice.questions.map((q, i) => (
+                            <li key={i}>{q}</li>
+                        ))}
+                    </ul>
+                    <div className="flex flex-wrap gap-2">
+                        {tags.map((tag) => (
+                            <span
+                                key={tag}
+                                className="bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-md text-[0.6875rem] font-bold tracking-wider uppercase border border-outline-variant/10"
+                            >
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* ── Mobile: Code tab ── */}
+            <div className={`lg:hidden ${activeTab === 'code' ? 'block' : 'hidden'}`}>
+                <div className="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl overflow-hidden neon-glow-primary transition-all">
+                    <div className="bg-surface-container p-3 px-5 flex justify-between items-center border-b border-outline-variant/10">
+                        <div className="flex items-center gap-2">
+                            <div className="flex gap-1.5">
+                                <div className="w-2.5 h-2.5 rounded-full bg-error/40" />
+                                <div className="w-2.5 h-2.5 rounded-full bg-secondary/40" />
+                                <div className="w-2.5 h-2.5 rounded-full bg-primary/40" />
+                            </div>
+                            <span className="text-[0.7rem] font-bold text-on-surface-variant uppercase tracking-widest ml-2">Sample Code</span>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={handleCopy}
+                            className="flex items-center gap-1.5 text-[0.6875rem] font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-lg border border-primary/20 active:scale-95 transition-all"
+                        >
+                            <span className="material-symbols-outlined text-sm">content_copy</span>
+                            {copied ? 'COPIED' : 'COPY'}
+                        </button>
+                    </div>
+                    <div className="p-4 overflow-x-auto">
+                        <pre className="font-mono text-xs md:text-sm leading-relaxed text-on-surface whitespace-pre-wrap break-words">
+                            <code>{practice.code}</code>
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+            {/* ── Mobile: Floating action bar ── */}
+            <div className="lg:hidden fixed bottom-[4.5rem] left-4 right-4 z-40 flex justify-center">
+                <div
+                    className="px-4 py-3 rounded-2xl flex items-center gap-3 shadow-2xl"
+                    style={{
+                        background: 'rgba(32,31,32,0.9)',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                    }}
+                >
+                    <ActionBar />
+                </div>
+            </div>
+
+            {/* ── Desktop: 2-col layout ── */}
+            <div className="hidden lg:grid grid-cols-12 gap-8 items-start mb-24">
+                <section className="col-span-5 h-full">
                     <div className="bg-surface-container border border-outline-variant/20 p-8 rounded-2xl h-full flex flex-col neon-glow-secondary transition-all duration-300">
                         <div className="flex items-center gap-2 mb-6">
                             <span className="material-symbols-outlined text-secondary">quiz</span>
-                            <h3 className="text-lg font-bold text-on-surface uppercase tracking-widest text-[0.75rem]">
-                                Problem
-                            </h3>
+                            <h3 className="text-lg font-bold text-on-surface uppercase tracking-widest text-[0.75rem]">Problem</h3>
                         </div>
                         <ul className="text-on-surface text-[1rem] leading-relaxed mb-8 flex-grow list-disc pl-5 space-y-3">
                             {practice.questions.map((q, i) => (
@@ -157,7 +266,7 @@ export default function DailyPractice({ apiBase, onMarkPracticed }) {
                     </div>
                 </section>
 
-                <section className="lg:col-span-7 h-full">
+                <section className="col-span-7 h-full">
                     <div className="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl overflow-hidden neon-glow-primary transition-all duration-300 h-full flex flex-col">
                         <div className="bg-surface-container p-4 px-6 flex justify-between items-center border-b border-outline-variant/10">
                             <div className="flex items-center gap-3">
@@ -166,9 +275,7 @@ export default function DailyPractice({ apiBase, onMarkPracticed }) {
                                     <div className="w-3 h-3 rounded-full bg-secondary/40" />
                                     <div className="w-3 h-3 rounded-full bg-primary/40" />
                                 </div>
-                                <span className="text-[0.75rem] font-bold text-on-surface-variant uppercase tracking-widest ml-4">
-                                    Sample Code
-                                </span>
+                                <span className="text-[0.75rem] font-bold text-on-surface-variant uppercase tracking-widest ml-4">Sample Code</span>
                             </div>
                             <button
                                 type="button"
@@ -188,15 +295,15 @@ export default function DailyPractice({ apiBase, onMarkPracticed }) {
                 </section>
             </div>
 
-            <div className="fixed bottom-10 left-1/2 -translate-x-1/2 glass-panel px-6 py-4 rounded-full flex items-center gap-6 shadow-2xl z-50">
+            {/* Desktop: original floating bar */}
+            <div className="hidden lg:flex fixed bottom-10 left-1/2 -translate-x-1/2 glass-panel px-6 py-4 rounded-full items-center gap-6 shadow-2xl z-50">
                 <button
                     type="button"
                     onClick={handleMarkPracticed}
-                    className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-primary-container to-secondary-container text-white rounded-full font-bold text-sm tracking-tight hover:brightness-110 transition-all active:scale-95 shadow-[0_0_20px_rgba(109,40,217,0.3)]"
+                    className="flex items-center gap-3 px-6 py-3 rounded-full font-bold text-sm tracking-tight text-white hover:brightness-110 transition-all active:scale-95 shadow-[0_0_20px_rgba(109,40,217,0.3)]"
+                    style={{ background: 'linear-gradient(135deg, #6d28d9 0%, #0566d9 100%)' }}
                 >
-                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
-                        check_circle
-                    </span>
+                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                     Mark as Practiced
                 </button>
                 <div className="h-8 w-px bg-outline-variant/30" />
