@@ -7,6 +7,7 @@ import StatsGrid from './components/StatsGrid';
 import DataTable from './components/DataTable';
 import CurriculumView from './components/CurriculumView';
 import DailyPractice from './components/DailyPractice';
+import JaldiBataoAI from './components/JaldiBataoAI';
 import { formatDateDDMMYYYY } from './utils/dateFormat';
 
 const API_BASE = 'http://localhost:8000';
@@ -47,11 +48,11 @@ function App() {
         fetch(`${API_BASE}/all`),
         fetch(`${API_BASE}/stats`)
       ]);
-      
+
       const todayData = await safeJson(todayRes);
       const allData = await safeJson(allRes);
       const statsData = await safeJson(statsRes);
-      
+
       setTodayTask(todayData && !todayData.message ? todayData : null);
       setAllTasks(Array.isArray(allData) ? allData : []);
       setStats(statsData);
@@ -176,7 +177,7 @@ function App() {
         },
         body: JSON.stringify({ date })
       });
-      
+
       if (res.ok) await fetchActiveData();
     } catch (err) {
       console.error("Network error:", err);
@@ -184,27 +185,27 @@ function App() {
   };
 
   const handleUndoTask = async (date) => {
-      const currentPlan = plans.find((p) => p.id === activePlanId);
-      if (!currentPlan) return;
-      const updatedData = currentPlan.data.map((t) => (
-        String(t.Date) === String(date) ? { ...t, 'Done?': false, Status: 'Pending' } : t
-      ));
-      const updatedPlans = plans.map((p) => (p.id === activePlanId ? { ...p, data: updatedData } : p));
-      setPlans(updatedPlans);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPlans));
-      setAllTasks(updatedData);
-      try {
-        const res = await fetch(`${API_BASE}/uncomplete`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ date })
-        });
-        if (res.ok) await fetchActiveData();
-      } catch (err) {
-          console.error("Network error:", err);
-      }
+    const currentPlan = plans.find((p) => p.id === activePlanId);
+    if (!currentPlan) return;
+    const updatedData = currentPlan.data.map((t) => (
+      String(t.Date) === String(date) ? { ...t, 'Done?': false, Status: 'Pending' } : t
+    ));
+    const updatedPlans = plans.map((p) => (p.id === activePlanId ? { ...p, data: updatedData } : p));
+    setPlans(updatedPlans);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPlans));
+    setAllTasks(updatedData);
+    try {
+      const res = await fetch(`${API_BASE}/uncomplete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ date })
+      });
+      if (res.ok) await fetchActiveData();
+    } catch (err) {
+      console.error("Network error:", err);
+    }
   };
 
   const loadPlanById = async (id) => {
@@ -277,39 +278,44 @@ function App() {
           onLoadPlan={loadPlanById}
           onDeletePlan={deletePlanById}
         />
-        <div className="mt-16 p-4 md:p-6 lg:p-8 space-y-5 md:space-y-8 max-w-7xl mx-auto w-full pb-24 lg:pb-8">
+        {currentView === 'ai_chat' ? (
+          <div className="flex-1 mt-16 pb-[calc(env(safe-area-inset-bottom,0px)+64px)] lg:pb-0 h-[calc(100vh-64px)] overflow-hidden bg-[#0E0E0F]">
+            <JaldiBataoAI />
+          </div>
+        ) : (
+          <div className="mt-16 p-4 md:p-6 lg:p-8 space-y-5 md:space-y-8 max-w-7xl mx-auto w-full pb-24 lg:pb-8">
             {loading ? (
-                <div className="flex items-center justify-center min-h-[400px]">
-                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin shadow-[0_0_15px_rgba(109,40,217,0.5)]"></div>
-                </div>
-            ) : plans.length === 0 ? (
-                <section className="glass-card rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-10 text-center">
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tighter mb-3">Start a New Training Run</h2>
-                  <p className="text-on-surface-variant text-sm mb-6">Upload a CSV or XLSX. You can store up to 3 recent plans locally.</p>
-                  <button onClick={openFilePicker} className="px-6 py-3 rounded-xl bg-gradient-to-br from-primary-container to-secondary-container text-white font-semibold">
-                    New Training Run
-                  </button>
-                </section>
-            ) : currentView === 'dashboard' ? (
-                <>
-                    <HeroMission todayTask={todayTask} progress={stats?.progress_percentage} />
-                    <StatsGrid stats={stats} setCurrentView={setCurrentView} />
-                    {/* Read-only table for Dashboard */}
-                    <DataTable tasks={allTasks} onComplete={() => {}} readOnly={true} highlightedDate={todayTask?.Date} />
-                </>
-            ) : currentView === 'learning_paths' ? (
-                <CurriculumView tasks={allTasks} onComplete={handleCompleteTask} onUndo={handleUndoTask} stats={stats} highlightedDate={todayTask?.Date} />
-            ) : currentView === 'practice' ? (
-                <DailyPractice apiBase={API_BASE} onMarkPracticed={handleCompleteTask} />
-            ) : null}
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin shadow-[0_0_15px_rgba(109,40,217,0.5)]"></div>
+            </div>
+          ) : plans.length === 0 ? (
+            <section className="glass-card rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-10 text-center">
+              <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tighter mb-3">Start a New Training Run</h2>
+              <p className="text-on-surface-variant text-sm mb-6">Upload a CSV or XLSX. You can store up to 3 recent plans locally.</p>
+              <button onClick={openFilePicker} className="px-6 py-3 rounded-xl bg-gradient-to-br from-primary-container to-secondary-container text-white font-semibold">
+                New Training Run
+              </button>
+            </section>
+          ) : currentView === 'dashboard' ? (
+            <>
+              <HeroMission todayTask={todayTask} progress={stats?.progress_percentage} />
+              <StatsGrid stats={stats} setCurrentView={setCurrentView} />
+              {/* Read-only table for Dashboard */}
+              <DataTable tasks={allTasks} onComplete={() => { }} readOnly={true} highlightedDate={todayTask?.Date} />
+            </>
+          ) : currentView === 'learning_paths' ? (
+            <CurriculumView tasks={allTasks} onComplete={handleCompleteTask} onUndo={handleUndoTask} stats={stats} highlightedDate={todayTask?.Date} />
+          ) : currentView === 'practice' ? (
+            <DailyPractice apiBase={API_BASE} onMarkPracticed={handleCompleteTask} />
+          ) : null}
 
-            {uiError && (
-              <div className="rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 px-4 py-3 text-sm">
-                {uiError}
-              </div>
-            )}
-            
-            <footer className="w-full mt-auto py-8 md:py-12 flex flex-col items-center gap-3 md:gap-4 px-4 md:px-8 border-t border-[#4a4455]/20 bg-[#0A0A0B] rounded-2xl mb-4 md:mb-8">
+          {uiError && (
+            <div className="rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 px-4 py-3 text-sm">
+              {uiError}
+            </div>
+          )}
+
+          {/* <footer className="w-full mt-auto py-8 md:py-12 flex flex-col items-center gap-3 md:gap-4 px-4 md:px-8 border-t border-[#4a4455]/20 bg-[#0A0A0B] rounded-2xl mb-4 md:mb-8">
                 <div className="flex gap-4 md:gap-8 flex-wrap justify-center">
                     <a className="text-[#4a4455] text-[0.6rem] md:text-[0.6875rem] font-bold uppercase tracking-widest hover:text-[#adc6ff] transition-colors" href="#">Privacy Policy</a>
                     <a className="text-[#4a4455] text-[0.6rem] md:text-[0.6875rem] font-bold uppercase tracking-widest hover:text-[#adc6ff] transition-colors" href="#">Terms of Service</a>
@@ -318,8 +324,9 @@ function App() {
                 <p className="text-[#4a4455] text-[0.6rem] md:text-[0.6875rem] font-bold uppercase tracking-widest text-center">
                     © 2026 Neural Void Systems. Powered by Inter
                 </p>
-            </footer>
+            </footer> */}
         </div>
+        )}
       </main>
 
       {/* Mobile bottom nav — hidden on desktop */}

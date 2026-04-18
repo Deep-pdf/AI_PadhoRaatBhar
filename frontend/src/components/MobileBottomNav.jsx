@@ -10,6 +10,7 @@ export default function MobileBottomNav({ currentView, setCurrentView, onNewTrai
         { id: 'dashboard',       icon: 'dashboard',      label: 'Dashboard'  },
         { id: 'learning_paths',  icon: 'menu_book',      label: 'Curriculum' },
         { id: 'practice',        icon: 'fitness_center', label: 'Practice'   },
+        { id: 'ai_chat',         icon: 'smart_toy',      label: 'AI Chat'    },
     ];
 
     return (

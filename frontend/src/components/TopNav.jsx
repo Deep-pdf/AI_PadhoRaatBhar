@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logoPath from '../assets/LOGO1.png';
 
 /**
  * TopNav — desktop: full nav bar with search + tabs.
@@ -27,10 +28,10 @@ export default function TopNav({
                 <div className="flex items-center gap-4">
                     {/* Brand — always visible on mobile */}
                     <div className="flex items-center gap-2 lg:hidden">
-                        <div className="w-8 h-8 bg-primary-container rounded-lg flex items-center justify-center text-primary">
-                            <span className="material-symbols-outlined text-[1.1rem]">memory</span>
+                        <div className="w-8 h-8 bg-surface-container rounded-lg flex items-center justify-center shrink-0 overflow-hidden">
+                            <img src={logoPath} alt="PadhoRaatBhar" className="w-full h-full object-contain p-0.5" />
                         </div>
-                        <span className="text-lg font-black tracking-tighter text-[#d3bbff]">AI Tracker</span>
+                        <span className="text-[17px] font-black tracking-tight text-[#d3bbff] leading-none">PadhoRaatBhar</span>
                     </div>
 
                     {/* Search — desktop only */}
@@ -49,6 +50,7 @@ export default function TopNav({
                             { id: 'dashboard',      label: 'Dashboard'  },
                             { id: 'learning_paths', label: 'Curriculum' },
                             { id: 'practice',       label: 'Practice'   },
+                            { id: 'ai_chat',        label: 'JaldiBatao AI' },
                         ].map(({ id, label }) => (
                             <button
                                 key={id}
@@ -62,7 +64,6 @@ export default function TopNav({
                                 {label}
                             </button>
                         ))}
-                        <a className="text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded" href="#">Playground</a>
                         <a className="text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] transition-all duration-200 ease-out py-1 px-2 rounded" href="#">Settings</a>
                     </nav>
                 </div>
@@ -114,10 +115,10 @@ export default function TopNav({
                 {/* Drawer header */}
                 <div className="flex justify-between items-center mb-6">
                     <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-primary-container rounded-lg flex items-center justify-center text-primary">
-                            <span className="material-symbols-outlined text-[1.1rem]">memory</span>
+                        <div className="w-8 h-8 bg-surface-container rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                            <img src={logoPath} alt="PadhoRaatBhar" className="w-full h-full object-contain p-0.5" />
                         </div>
-                        <span className="text-base font-black tracking-tighter text-[#d3bbff]">AI Tracker</span>
+                        <span className="text-[17px] font-black tracking-tight text-[#d3bbff] leading-none">PadhoRaatBhar</span>
                     </div>
                     <button
                         id="mobile-menu-close"
@@ -187,6 +188,7 @@ export default function TopNav({
                         { id: 'dashboard',      icon: 'dashboard',      label: 'Overview'   },
                         { id: 'learning_paths', icon: 'auto_stories',   label: 'Learning Paths' },
                         { id: 'practice',       icon: 'terminal',       label: 'Practice'   },
+                        { id: 'ai_chat',        icon: 'smart_toy',      label: 'JaldiBatao AI' },
                     ].map(({ id, icon, label }) => (
                         <button
                             key={id}
