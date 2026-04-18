@@ -28,10 +28,10 @@ export default function TopNav({
                 <div className="flex items-center gap-4">
                     {/* Brand — always visible on mobile */}
                     <div className="flex items-center gap-2 lg:hidden">
-                        <div className="w-8 h-8 bg-surface-container rounded-lg flex items-center justify-center shrink-0 overflow-hidden">
-                            <img src={logoPath} alt="PadhoRaatBhar" className="w-full h-full object-contain p-0.5" />
+                        <div className="w-10 h-10 bg-surface-container rounded-lg flex items-center justify-center shrink-0 overflow-hidden">
+                            <img src={logoPath} alt="PadhoRaatBhar" className="w-[120%] h-[120%] object-contain" />
                         </div>
-                        <span className="text-[17px] font-black tracking-tight text-[#d3bbff] leading-none">PadhoRaatBhar</span>
+                        <span className="text-[24px] font-bebas tracking-tight text-[#d3bbff] leading-none">PadhoRaatBhar</span>
                     </div>
 
                     {/* Search — desktop only */}
@@ -115,10 +115,10 @@ export default function TopNav({
                 {/* Drawer header */}
                 <div className="flex justify-between items-center mb-6">
                     <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-surface-container rounded-lg flex items-center justify-center overflow-hidden shrink-0">
-                            <img src={logoPath} alt="PadhoRaatBhar" className="w-full h-full object-contain p-0.5" />
+                        <div className="w-10 h-10 bg-surface-container rounded-lg flex items-center justify-center overflow-hidden shrink-0">
+                            <img src={logoPath} alt="PadhoRaatBhar" className="w-[120%] h-[120%] object-contain" />
                         </div>
-                        <span className="text-[17px] font-black tracking-tight text-[#d3bbff] leading-none">PadhoRaatBhar</span>
+                        <span className="text-[24px] font-bebas tracking-tight text-[#d3bbff] leading-none">PadhoRaatBhar</span>
                     </div>
                     <button
                         id="mobile-menu-close"

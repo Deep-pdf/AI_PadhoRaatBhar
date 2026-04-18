@@ -26,13 +26,13 @@ export default function Sidebar({
 
     return (
         <aside className="fixed left-0 top-0 h-full w-64 z-40 bg-[#0E0E0F] flex flex-col py-5 px-4 hidden lg:flex border-r border-[#4a4455]/20">
-            <div className="mb-6 px-2">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center shadow-lg overflow-hidden shrink-0">
-                        <img src={logoPath} alt="PadhoRaatBhar Logo" className="w-full h-full object-contain p-1" />
+            <div className="mb-6 px-0">
+                <div className="flex items-center gap-1">
+                    <div className="w-14 h-14 rounded-lg flex items-center justify-center shadow-lg overflow-hidden shrink-0">
+                        <img src={logoPath} alt="PadhoRaatBhar Logo" className="w-[120%] h-[120%] object-contain" />
                     </div>
                     <div>
-                        <h2 className="text-[17px] font-black text-[#d3bbff] leading-none tracking-tight">PadhoRaatBhar</h2>
+                        <h2 className="text-[32px] font-bebas text-[#d3bbff] leading-none tracking-tight">PadhoRaatBhar</h2>
                         <p className="text-[0.62rem] text-on-surface-variant/60 tracking-widest mt-1 uppercase">Beta Access</p>
                     </div>
                 </div>

@@ -60,6 +60,7 @@ export default {
         headline: ["Inter", "sans-serif"],
         body: ["Inter", "sans-serif"],
         label: ["Inter", "sans-serif"],
+        bebas: ['Bebas Neue', 'sans-serif'],
       }
     },
   },
