@@ -8,6 +8,7 @@ import DataTable from './components/DataTable';
 import CurriculumView from './components/CurriculumView';
 import DailyPractice from './components/DailyPractice';
 import JaldiBataoAI from './components/JaldiBataoAI';
+import ApiKeyManager from './components/ApiKeyManager';
 import { formatDateDDMMYYYY } from './utils/dateFormat';
 
 const API_BASE = 'http://localhost:8000';
@@ -279,7 +280,7 @@ function App() {
           onDeletePlan={deletePlanById}
         />
         {currentView === 'ai_chat' ? (
-          <div className="flex-1 mt-16 pb-[calc(env(safe-area-inset-bottom,0px)+64px)] lg:pb-0 h-[calc(100vh-64px)] overflow-hidden bg-[#0E0E0F]">
+          <div className="fixed top-16 right-0 bottom-[calc(env(safe-area-inset-bottom,-8px)+64px)] lg:bottom-0 left-0 lg:left-64 z-20 flex flex-col overflow-hidden bg-[#0E0E0F]">
             <JaldiBataoAI />
           </div>
         ) : (
@@ -307,6 +308,8 @@ function App() {
             <CurriculumView tasks={allTasks} onComplete={handleCompleteTask} onUndo={handleUndoTask} stats={stats} highlightedDate={todayTask?.Date} />
           ) : currentView === 'practice' ? (
             <DailyPractice apiBase={API_BASE} onMarkPracticed={handleCompleteTask} />
+          ) : currentView === 'api_key' ? (
+            <ApiKeyManager />
           ) : null}
 
           {uiError && (

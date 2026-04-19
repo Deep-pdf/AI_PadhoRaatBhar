@@ -51,6 +51,7 @@ export default function TopNav({
                             { id: 'learning_paths', label: 'Curriculum' },
                             { id: 'practice',       label: 'Practice'   },
                             { id: 'ai_chat',        label: 'JaldiBatao AI' },
+                            { id: 'api_key',        label: 'API Key'    },
                         ].map(({ id, label }) => (
                             <button
                                 key={id}
@@ -189,6 +190,7 @@ export default function TopNav({
                         { id: 'learning_paths', icon: 'auto_stories',   label: 'Learning Paths' },
                         { id: 'practice',       icon: 'terminal',       label: 'Practice'   },
                         { id: 'ai_chat',        icon: 'smart_toy',      label: 'JaldiBatao AI' },
+                        { id: 'api_key',        icon: 'key',            label: 'API Key'    },
                     ].map(({ id, icon, label }) => (
                         <button
                             key={id}
