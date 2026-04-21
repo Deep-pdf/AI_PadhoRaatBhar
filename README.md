@@ -1,27 +1,38 @@
-# AI Padho Raato Raat
+# AI Padho Raato Raat + JaldiBatao AI
 
-A small full-stack app for tracking a **dated AI/ML study curriculum**: upload a spreadsheet (or bootstrap from local data), see **today’s focus**, **progress and streaks**, mark days **done**, and open **topic-based daily practice** (curated prompts and sample code—no external AI APIs).
+A full-stack web application designed for two main purposes:
+1. **Curriculum Tracker**: Track a dated AI/ML study curriculum by uploading a spreadsheet. View today’s focus, monitor progress/streaks, mark days done, and access topic-based daily practice (curated prompts and sample code).
+2. **JaldiBatao AI**: A modern, mobile-responsive AI chat interface powered by the Google Gemini API to assist with your learning and coding queries directly in the app.
 
 ## What’s inside
 
 | Part | Tech |
 |------|------|
 | **API** | [FastAPI](https://fastapi.tiangolo.com/), [pandas](https://pandas.pydata.org/), [openpyxl](https://openpyxl.readthedocs.io/) (Excel) |
-| **UI** | [React](https://react.dev/) 19, [Vite](https://vite.dev/) 8, [Tailwind CSS](https://tailwindcss.com/) 3 |
-
-The frontend talks to the API at `http://localhost:8000` (see `frontend/src/App.jsx`). The backend enables CORS for local development.
+| **UI** | [React](https://react.dev/) 19, [Vite](https://vite.dev/) 8, [Tailwind CSS](https://tailwindcss.com/) 3, Framer Motion |
+| **AI Integration** | [Google Gemini API](https://ai.google.dev/) via `@google/generative-ai` |
 
 ## Repository layout
 
 ```
 backend/          # FastAPI app, data.json, practice content
-frontend/         # Vite + React dashboard
+frontend/         # Vite + React dashboard, JaldiBatao AI Chat UI
 ```
+
+## Features
+
+- **Progress Dashboard**: Upload a curriculum (`.xlsx` or `.csv`), view stats, and mark tasks complete.
+- **Learning Paths**: Manage multiple training plans locally via `localStorage`.
+- **Daily Practice**: Auto-generated practice coding questions based on the active topic.
+- **JaldiBatao AI Chat**: A sleek, full-screen Gemini-powered chat assistant.
+  - **Local API Key Security**: Your Gemini API key is securely saved directly in your browser's `localStorage` and is *never* sent to the backend. Manage keys directly in the app's settings.
+- **Mobile Responsive Layout**: Optimized for both desktop and mobile, with bottom navigation tabs and a seamless hamburger menu for smaller screens.
 
 ## Prerequisites
 
 - **Python** 3.10+ (3.11+ recommended) with `pip`
 - **Node.js** 18+ and npm (for the frontend)
+- (Optional but recommended) **Google Gemini API Key** for JaldiBatao AI chat.
 
 ## Quick start
 
@@ -47,8 +58,6 @@ python main.py
 
 The server listens on **http://127.0.0.1:8000** (or `http://localhost:8000`).
 
-On startup, tasks are loaded from `backend/data.json` if it exists. If not, the app may try to import a workbook path configured in `backend/main.py` (`EXCEL_FILE`) and then write `data.json`. You can always **upload** a plan from the UI instead.
-
 ### 2. Frontend
 
 In a second terminal:
@@ -64,10 +73,10 @@ Open the URL Vite prints (typically **http://localhost:5173**).
 ## Using the app
 
 1. **Upload a curriculum** (`.xlsx` or `.csv`) from the dashboard. The backend validates and normalizes rows.
-2. **Activate a plan** (the UI can keep multiple plans in `localStorage` and sync the active one to the server via `/set-active-plan`).
-3. View **today’s task** (`/today`), the full table (`/all`), and **stats** (`/stats`).
-4. Mark the current day **complete** or **pending**; streaks use weekday rows in order (see `/stats` implementation in `backend/main.py`).
-5. Open **Daily practice** for the active topic; content comes from `backend/practice_generator.py` (deterministic map + generic fallback for unknown topics).
+2. **Activate a plan** (the UI keeps multiple plans in `localStorage` and syncs the active one to the server).
+3. **Set API Key**: Go to the API Keys section via the navigation menu to input your Google Gemini API Key.
+4. **Chat with JaldiBatao AI**: Open the AI Chat view and ask questions related to your curriculum.
+5. **Mark Progress**: Mark the current learning day complete or pending. Open Daily Practice for curated content.
 
 ## Spreadsheet format
 
@@ -81,23 +90,7 @@ Open the URL Vite prints (typically **http://localhost:5173**).
 | `Resource` | Link or reference |
 
 **Optional columns:** `Status`, `Done?`, `Notes`, `Hours`, `Day` (if `Day` is missing, the server derives it from the date).
-
 Rows missing date, topic, task, or resource are dropped during import.
-
-## HTTP API (summary)
-
-| Method | Path | Purpose |
-|--------|------|---------|
-| `GET` | `/all` | Full task list |
-| `GET` | `/today` | Today’s row, or next pending, or a message if none |
-| `GET` | `/stats` | Totals, completion %, weekday streak |
-| `GET` | `/practice` | Practice questions + snippet for current topic |
-| `POST` | `/upload` | Multipart file upload (`.xlsx` / `.csv`) → normalized `data` + `preview` |
-| `POST` | `/set-active-plan` | JSON `{ "tasks": [ ... ] }` replaces in-memory plan |
-| `POST` | `/complete` | JSON `{ "date": "YYYY-MM-DD" }` marks that date done |
-| `POST` | `/uncomplete` | JSON `{ "date": "YYYY-MM-DD" }` marks pending |
-
-Interactive docs: **http://localhost:8000/docs** (Swagger UI).
 
 ## Scripts (frontend)
 
@@ -110,8 +103,9 @@ Interactive docs: **http://localhost:8000/docs** (Swagger UI).
 
 ## Data notes
 
-- **In-memory + file:** The running API keeps tasks in memory (`active_tasks_data`). Upload and `/set-active-plan` update that list; completing tasks updates it in place. Persisting to `data.json` on every change is not wired in the current code—if you need durability across restarts, save from the UI (plans in `localStorage`) and **POST `/set-active-plan`** after restart, or extend the backend to call `save_data` where appropriate.
-- **Security:** CORS is `allow_origins=["*"]` and the stack is intended for **local/trusted** use. Do not expose this blindly on the public internet without hardening.
+- **In-memory + file:** The running API keeps tasks in memory (`active_tasks_data`). Upload and `/set-active-plan` update that list. Persisting to `data.json` on every change is not wired in the current code setup automatically unless you use the UI. Use the frontend app to save plans into `localStorage`.
+- **API Key Security**: The Gemini API calls happen securely client-side. The backend is completely unaware of the AI chat traffic.
+- **Security:** CORS is `allow_origins=["*"]` on the backend. This stack is intended for **local/trusted** use. Do not expose this blindly on the public internet.
 
 ## License
 
