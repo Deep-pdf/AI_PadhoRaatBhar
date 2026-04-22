@@ -122,6 +122,10 @@ export default function Sidebar({
                     <span className="material-symbols-outlined">key</span>
                     <span className="text-sm font-medium">API Key</span>
                 </button>
+                <button onClick={() => setCurrentView('profile')} className={`w-full flex items-center gap-3 px-4 py-2.5 transition-all rounded-lg group ${currentView === 'profile' ? 'bg-[#201F20] text-[#d3bbff] shadow-[0_0_15px_rgba(109,40,217,0.3)]' : 'text-[#ccc3d7] opacity-70 hover:bg-[#2A2A2B] hover:opacity-100'}`}>
+                    <span className="material-symbols-outlined">person</span>
+                    <span className="text-sm font-medium">Profile</span>
+                </button>
 
             </nav>
 

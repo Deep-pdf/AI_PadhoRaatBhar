@@ -77,9 +77,12 @@ export default function TopNav({
                     <button className="p-2 text-[#ccc3d7] hover:text-[#d3bbff] hover:bg-[#201F20] rounded-full transition-colors hidden md:flex">
                         <span className="material-symbols-outlined">terminal</span>
                     </button>
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant hidden sm:block">
+                    <button 
+                        onClick={() => setCurrentView('profile')}
+                        className="w-8 h-8 rounded-full overflow-hidden border border-outline-variant hidden sm:block hover:shadow-[0_0_15px_rgba(109,40,217,0.3)] hover:border-primary/50 transition-all cursor-pointer"
+                    >
                         <img alt="User Profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvhx_lJcF37wDccZKT3v62yJCBreX2p2fhaFsVeSRKeatOOkDBAJCwXwyhWXzW3GU4QqvZJj282ZKlWtY2x0Vj7FLTDqaeTAbGePykxlKuJ0gHXMktlvVeG3SyyeL9UmJKl-VP9J0Q6hKRkU5ND1I5Z4a7IIpclG_cd71eDsK55ejRXyzXjwdH2XK2wO6tXdYv3Fy3aKhFwU2sx0jRKOWcaTRvVfubi2dEh9hATlflYseJ3lT9KsD7DqYr3iN3_xIRp5hkH6VU-Cd-" />
-                    </div>
+                    </button>
 
                     {/* Hamburger — mobile only */}
                     <button
@@ -191,6 +194,7 @@ export default function TopNav({
                         { id: 'practice',       icon: 'terminal',       label: 'Practice'   },
                         { id: 'ai_chat',        icon: 'smart_toy',      label: 'JaldiBatao AI' },
                         { id: 'api_key',        icon: 'key',            label: 'API Key'    },
+                        { id: 'profile',        icon: 'person',         label: 'Profile'    },
                     ].map(({ id, icon, label }) => (
                         <button
                             key={id}

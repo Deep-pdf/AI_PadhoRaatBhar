@@ -9,6 +9,7 @@ import CurriculumView from './components/CurriculumView';
 import DailyPractice from './components/DailyPractice';
 import JaldiBataoAI from './components/JaldiBataoAI';
 import ApiKeyManager from './components/ApiKeyManager';
+import UserProfile from './components/UserProfile';
 import { formatDateDDMMYYYY } from './utils/dateFormat';
 
 const API_BASE = 'http://localhost:8000';
@@ -310,6 +311,8 @@ function App() {
             <DailyPractice apiBase={API_BASE} onMarkPracticed={handleCompleteTask} />
           ) : currentView === 'api_key' ? (
             <ApiKeyManager />
+          ) : currentView === 'profile' ? (
+            <UserProfile />
           ) : null}
 
           {uiError && (
